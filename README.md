@@ -1,6 +1,3 @@
-# [Admin One &mdash; Free React Tailwind 3.x Admin Dashboard with dark mode](https://justboil.me/tailwind-admin-templates/free-react-dashboard/)
-
-[![version](https://img.shields.io/github/v/release/justboil/admin-one-react-tailwind)](https://justboil.me/tailwind-admin-templates/free-react-dashboard/)  [![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://justboil.me/tailwind-admin-templates/free-react-dashboard/)
 
 ### Tailwind 3.x React with Next.js and TypeScript
 
@@ -13,14 +10,10 @@
 **Admin One** is fast, beautiful and free React Next Tailwind CSS 3.x admin dashboard with TypeScript. 
 
 * Built with **TypeScript**, **React**, **Tailwind CSS 3** framework & **Next.js**
-* **React Redux** state library &mdash; [Info](https://react-redux.js.org/)
 * **Dark mode**
 * **Styled** scrollbars
 * SPA with **Next.js**
-* **Production CSS** is only **&thickapprox;38kb**
 * Reusable components
-* Free under MIT License
-* [Premium version](https://justboil.me/tailwind-admin-templates/react-dashboard/) available
 
 ## Table of Contents
 
@@ -46,7 +39,6 @@
 
 This is **Tailwind React TypeScript** version
 
-Looking for **Tailwind Vue**? Check [Admin One - Vue Tailwind dashboard](https://github.com/justboil/admin-one-vue-tailwind) version
 
 ## Responsive layout
 
@@ -72,9 +64,7 @@ Classic layout with aside menus on the left
 
 ## Demo
 
-### Free Dashboard Demo
 
-https://justboil.github.io/admin-one-react-tailwind/
 
 ### Premium Dashboard Demo
 
@@ -86,15 +76,7 @@ Get code & install. Then `dev` or `build`
 
 * [Get code & install](#get-code--install)
 * [Builds](#builds)
-* [Linting and formatting](#linting-and-formatting)
 
-### Get code & install
-
-#### Get the repo
-
-* [Create new repo](https://github.com/justboil/admin-one-react-tailwind/generate) with this template
-* &hellip; or clone this repo on GitHub
-* &hellip; or [download .zip](https://github.com/justboil/admin-one-react-tailwind/archive/master.zip) from GitHub
 
 #### Install
 
@@ -158,10 +140,7 @@ The issue list is reserved exclusively for bug reports and feature requests. Tha
 4. Describe what is actually happening
 5. Platform, Browser & version as some issues may be browser specific
 
-## Licensing
 
-- Copyright &copy; 2019-2022 JustBoil.me (https://justboil.me)
-- Licensed under MIT
 
 ## Useful Links
 
