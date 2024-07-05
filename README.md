@@ -17,7 +17,6 @@
 
 ## Table of Contents
 
-* [Vue version](#looking-for-vue-version)
 * [Responsive layout](#responsive-layout)
   * [Mobile & tablet](#mobile--tablet)
   * [Small laptops](#small-laptops-1024px)
@@ -32,8 +31,7 @@
 * [Docs](#docs)
 * [Browser Support](#browser-support)
 * [Reporting Issues](#reporting-issues)
-* [Licensing](#licensing)
-* [Useful Links](#useful-links)
+
 
 ## Looking for Vue version?
 
