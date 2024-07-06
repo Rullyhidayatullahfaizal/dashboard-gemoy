@@ -87,12 +87,12 @@ export default function LayoutAuthenticated({ children }: Props) {
         <FooterBar>
           Get more with{` `}
           <a
-            href="https://tailwind-react.justboil.me/dashboard"
+            href="https://github.com/Rullyhidayatullahfaizal/dashboard-gemoy"
             target="_blank"
             rel="noreferrer"
             className="text-blue-600"
           >
-            Premium version
+            Tim Gemoy
           </a>
         </FooterBar>
       </div>

@@ -1,28 +1,36 @@
 import { mdiEye, mdiTrashCan } from '@mdi/js'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSampleClients } from '../../hooks/sampleData'
 import { Client } from '../../interfaces'
 import Button from '../Button'
 import Buttons from '../Buttons'
 import CardBoxModal from '../CardBox/Modal'
 import UserAvatar from '../UserAvatar'
+import { useAxios } from '../../config'
+import jwtDecode from 'jwt-decode'
 
 const TableSampleClients = () => {
   const { clients } = useSampleClients()
+  const [siswa, setSiswa] = useState([])
+  const api = useAxios()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await api.get("/users")
+        setSiswa(response.data)
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
+    }
+    fetchData()
+  }, [])
 
   const perPage = 5
-
   const [currentPage, setCurrentPage] = useState(0)
-
   const clientsPaginated = clients.slice(perPage * currentPage, perPage * (currentPage + 1))
-
-  const numPages = clients.length / perPage
-
-  const pagesList = []
-
-  for (let i = 0; i < numPages; i++) {
-    pagesList.push(i)
-  }
+  const numPages = Math.ceil(clients.length / perPage)
+  const pagesList = Array.from({ length: numPages }, (_, i) => i)
 
   const [isModalInfoActive, setIsModalInfoActive] = useState(false)
   const [isModalTrashActive, setIsModalTrashActive] = useState(false)
@@ -66,34 +74,34 @@ const TableSampleClients = () => {
         <thead>
           <tr>
             <th />
-            <th>Name</th>
-            <th>Company</th>
-            <th>City</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Nama kelas</th>
             <th>Progress</th>
             <th>Created</th>
             <th />
           </tr>
         </thead>
         <tbody>
-          {clientsPaginated.map((client: Client) => (
-            <tr key={client.id}>
+          {siswa.slice(perPage * currentPage, perPage * (currentPage + 1)).map((user, index) => (
+            <tr key={user.id}>
               <td className="border-b-0 lg:w-6 before:hidden">
-                <UserAvatar username={client.name} className="w-24 h-24 mx-auto lg:w-6 lg:h-6" />
+                <UserAvatar username={clientsPaginated[index]?.name} className="w-24 h-24 mx-auto lg:w-6 lg:h-6" />
               </td>
-              <td data-label="Name">{client.name}</td>
-              <td data-label="Company">{client.company}</td>
-              <td data-label="City">{client.city}</td>
+              <td data-label="Username">{user.username}</td>
+              <td data-label="Email">{user.email}</td>
+              <td data-label="Nama kelas">{user.nama_kelas}</td>
               <td data-label="Progress" className="lg:w-32">
                 <progress
                   className="flex w-2/5 self-center lg:w-full"
                   max="100"
-                  value={client.progress}
+                  value={clientsPaginated[index]?.progress}
                 >
-                  {client.progress}
+                  {clientsPaginated[index]?.progress}
                 </progress>
               </td>
               <td data-label="Created" className="lg:w-1 whitespace-nowrap">
-                <small className="text-gray-500 dark:text-slate-400">{client.created}</small>
+                <small className="text-gray-500 dark:text-slate-400">{user.created}</small>
               </td>
               <td className="before:hidden lg:w-1 whitespace-nowrap">
                 <Buttons type="justify-start lg:justify-end" noWrap>

@@ -5,7 +5,7 @@ import Icon from './Icon'
 import type { ColorButtonKey } from '../interfaces'
 
 type Props = {
-  label?: string
+  label?: string | number
   icon?: string
   iconSize?: string | number
   href?: string
