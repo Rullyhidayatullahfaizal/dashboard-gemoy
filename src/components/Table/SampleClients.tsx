@@ -7,11 +7,16 @@ import Buttons from '../Buttons'
 import CardBoxModal from '../CardBox/Modal'
 import UserAvatar from '../UserAvatar'
 import { useAxios } from '../../config'
-import jwtDecode from 'jwt-decode'
+import {jwtDecode} from 'jwt-decode'
+import axios from 'axios'
+
 
 const TableSampleClients = () => {
   const { clients } = useSampleClients()
   const [siswa, setSiswa] = useState([])
+  const [token,setToken] = useState<any>('')
+  const [name,setName] = useState<string>('')
+  const [expire,setExpire] = useState<any>('')
   const api = useAxios()
 
   useEffect(() => {
@@ -19,12 +24,46 @@ const TableSampleClients = () => {
       try {
         const response = await api.get("/users")
         setSiswa(response.data)
+        console.log(response.data)
       } catch (error) {
         console.error('Error fetching data:', error)
       }
     }
+    // refreshToken() 
     fetchData()
   }, [])
+
+    const refreshToken = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/admin-token')
+        setToken(response.data.accesToken)
+        const decode = jwtDecode(response.data.accesToken)
+        setName(decode.iss)
+        setExpire(decode.exp)
+
+      } catch (error) {
+        if(error.response){
+          console.error()
+        }
+      }
+    }
+
+  const axiosJWT = axios.create()
+
+  axiosJWT.interceptors.request.use(async(config) => {
+    const currentDate = new Date();
+    if (expire * 1000 < currentDate.getTime()) {
+        const response = await axios.get("http://localhost:5000/admin-token");
+        config.headers.Authorization = `Bearer ${response.data.accesToken}`;
+        setToken(response.data.accesToken);
+        const decoded = jwtDecode(response.data.accesToken);
+        setName(decoded.iss)
+        setExpire(decoded.exp)
+    }
+    return config
+  },(error) => {
+    return Promise.reject(error)
+  })
 
   const perPage = 5
   const [currentPage, setCurrentPage] = useState(0)
@@ -101,7 +140,7 @@ const TableSampleClients = () => {
                 </progress>
               </td>
               <td data-label="Created" className="lg:w-1 whitespace-nowrap">
-                <small className="text-gray-500 dark:text-slate-400">{user.created}</small>
+                <small className="text-gray-500 dark:text-slate-400">{user.createdAt}</small>
               </td>
               <td className="before:hidden lg:w-1 whitespace-nowrap">
                 <Buttons type="justify-start lg:justify-end" noWrap>

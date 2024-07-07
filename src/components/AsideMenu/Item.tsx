@@ -23,9 +23,7 @@ const AsideMenuItem = ({ item, isDropdownList = false }: Props) => {
   useEffect(() => {
     if (item.href && isReady) {
       const linkPathName = new URL(item.href, location.href).pathname
-
       const activePathname = new URL(asPath, location.href).pathname
-
       setIsLinkActive(linkPathName === activePathname)
     }
   }, [item.href, isReady, asPath])
@@ -60,15 +58,22 @@ const AsideMenuItem = ({ item, isDropdownList = false }: Props) => {
       : `aside-menu-item dark:text-slate-300 dark:hover:text-white`,
   ].join(' ')
 
+  const handleClick = () => {
+    if (item.onClick) {
+      item.onClick()
+    } else {
+      setIsDropdownActive(!isDropdownActive)
+    }
+  }
+
   return (
     <li>
-      {item.href && (
+      {item.href ? (
         <Link href={item.href} target={item.target} className={componentClass}>
           {asideMenuItemInnerContents}
         </Link>
-      )}
-      {!item.href && (
-        <div className={componentClass} onClick={() => setIsDropdownActive(!isDropdownActive)}>
+      ) : (
+        <div className={componentClass} onClick={handleClick}>
           {asideMenuItemInnerContents}
         </div>
       )}

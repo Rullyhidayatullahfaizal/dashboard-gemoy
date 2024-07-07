@@ -1,9 +1,9 @@
 import {
   mdiAccountMultiple,
-  mdiCartOutline,
+  
   mdiChartPie,
   mdiChartTimelineVariant,
-  mdiGithub,
+  
   mdiMonitorCellphone,
   mdiReload,
 } from '@mdi/js'

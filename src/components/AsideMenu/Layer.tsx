@@ -5,6 +5,9 @@ import AsideMenuItem from './Item'
 import AsideMenuList from './List'
 import { MenuAsideItem } from '../../interfaces'
 import { useAppSelector } from '../../stores/hooks'
+import { useRouter } from 'next/router'
+import { useCookies } from 'react-cookie'
+import axios from 'axios'
 
 type Props = {
   menu: MenuAsideItem[]
@@ -14,12 +17,24 @@ type Props = {
 
 export default function AsideMenuLayer({ menu, className = '', ...props }: Props) {
   const darkMode = useAppSelector((state) => state.darkMode.isEnabled)
+  const [cookies, setCookie, removeCookie] = useCookies(['token', 'refreshToken'])
+  const router = useRouter()
 
   const logoutItem: MenuAsideItem = {
     label: 'Logout',
     icon: mdiLogout,
     color: 'info',
     isLogout: true,
+    onClick:async () => {
+      try {
+        await axios.delete('http://localhost:5000/admin-logout')
+        removeCookie('token', { path: '/' })
+        removeCookie('refreshToken', { path: '/' })
+        router.push('/login')
+      } catch (err) {
+        console.error('Logout failed', err)
+      }
+    }
   }
 
   const handleAsideLgCloseClick = (e: React.MouseEvent) => {

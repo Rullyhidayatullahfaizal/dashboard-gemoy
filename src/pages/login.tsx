@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import type { ReactElement } from 'react'
 import Head from 'next/head'
 import Button from '../components/Button'
@@ -25,6 +25,7 @@ type LoginForm = {
 const LoginPage = () => {
   const router = useRouter()
   const [cookies, setCookie] = useCookies(['token'])
+  const [errorMessage, setErrorMessage] = useState('') // Add state for error message
 
   const initialValues: LoginForm = {
     username: '',
@@ -57,9 +58,11 @@ const LoginPage = () => {
         router.push('/dashboard')
       } else {
         console.error('No token received')
+        setErrorMessage('Login failed: Incorrect username or password') // Set error message on failure
       }
     } catch (error) {
       console.error('Login failed:', error)
+      setErrorMessage('Login failed: Incorrect username or password') // Set error message on failure
     }
   }
 
@@ -95,6 +98,10 @@ const LoginPage = () => {
                 <FormCheckRadio type="checkbox" label="Remember">
                   <Field type="checkbox" name="remember" />
                 </FormCheckRadio>
+
+                {errorMessage && ( // Conditionally render error message
+                  <div className="text-red-500">{errorMessage}</div>
+                )}
 
                 <Divider />
 
