@@ -22,7 +22,7 @@ const menuAside: MenuAsideItem[] = [
   },
   {
     href: '/tables',
-    label: 'Tables',
+    label: 'Administrator',
     icon: mdiTable,
   },
   {

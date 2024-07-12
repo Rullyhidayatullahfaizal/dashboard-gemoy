@@ -8,7 +8,7 @@ import {
   mdiReload,
 } from '@mdi/js'
 import Head from 'next/head'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import type { ReactElement } from 'react'
 import Button from '../components/Button'
 import LayoutAuthenticated from '../layouts/Authenticated'
@@ -17,7 +17,7 @@ import SectionTitleLineWithButton from '../components/Section/TitleLineWithButto
 import CardBoxWidget from '../components/CardBox/Widget'
 import { useSampleClients, useSampleTransactions } from '../hooks/sampleData'
 import CardBoxTransaction from '../components/CardBox/Transaction'
-import { Client, Transaction } from '../interfaces'
+import { Client, ReportTranksasi, Transaction } from '../interfaces'
 import CardBoxClient from '../components/CardBox/Client'
 import CardBox from '../components/CardBox'
 import { sampleChartData } from '../components/ChartLineSample/config'
@@ -25,12 +25,28 @@ import ChartLineSample from '../components/ChartLineSample'
 import NotificationBar from '../components/NotificationBar'
 import TableSampleClients from '../components/Table/SampleClients'
 import { getPageTitle } from '../config'
+import axios from 'axios'
 
 const DashboardPage = () => {
   const { clients } = useSampleClients()
   const { transactions } = useSampleTransactions()
+  const [report,setReport] = useState<ReportTranksasi[]>([])
 
-  const clientsListed = clients.slice(0, 4)
+  useEffect(() => {
+    const fetchReport = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/report')
+        setReport(response.data)
+        console.log(response.data)
+      } catch (error) {
+        console.error('Error fetching report:', error)
+      }
+    }
+
+    fetchReport()
+  }, [])
+
+  const clientsListed = clients.slice(0, 8)
 
   const [chartData, setChartData] = useState(sampleChartData())
 
@@ -40,13 +56,21 @@ const DashboardPage = () => {
     setChartData(sampleChartData())
   }
 
+  const combinedData = clientsListed.map((client:any) => {
+    const clientReport = report.find((r) => r.id === client.id)
+    return {
+      ...client,
+      report: clientReport || {},
+    }
+  })
+
   return (
     <>
       <Head>
         <title>{getPageTitle('Dashboard')}</title>
       </Head>
       <SectionMain>
-        <SectionTitleLineWithButton icon={mdiChartTimelineVariant} title="Overview" main>
+        <SectionTitleLineWithButton icon={mdiChartTimelineVariant} title="Transaksi" main>
           
         </SectionTitleLineWithButton>
 
@@ -82,15 +106,10 @@ const DashboardPage = () => {
           />
         </div> */}
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          <div className="flex flex-col justify-between">
-            {transactions.map((transaction: Transaction) => (
-              <CardBoxTransaction key={transaction.id} transaction={transaction} />
-            ))}
-          </div>
-          <div className="flex flex-col justify-between">
-            {clientsListed.map((client: Client) => (
-              <CardBoxClient key={client.id} client={client} />
+        <div className="flex flex-cols-1 lg:flex-cols-2 gap-6 mb-6">
+          <div className="flex flex-wrap justify-between">
+            {combinedData.map((data:any, index:any) => (
+              <CardBoxClient key={index} client={data}  />
             ))}
           </div>
         </div>
@@ -112,7 +131,7 @@ const DashboardPage = () => {
         </NotificationBar>
 
         <CardBox hasTable>
-          <TableSampleClients />
+          <TableSampleClients apiUrl='/users' />
         </CardBox>
       </SectionMain>
     </>

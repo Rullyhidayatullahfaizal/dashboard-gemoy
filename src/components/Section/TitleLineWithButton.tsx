@@ -5,7 +5,7 @@ import Icon from '../Icon'
 import IconRounded from '../Icon/Rounded'
 
 type Props = {
-  icon: string
+  icon?: string
   title: string
   main?: boolean
   children?: ReactNode

@@ -68,6 +68,14 @@ export type Client = {
   created_mm_dd_yyyy: string
 }
 
+export type ReportTranksasi = {
+  id: number
+  description:string
+  foodName: string
+  studentUsername:string
+  scanDate:string
+}
+
 export type UserForm = {
   name: string
   email: string

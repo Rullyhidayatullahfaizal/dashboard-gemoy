@@ -1,5 +1,5 @@
 import { mdiEye, mdiTrashCan } from '@mdi/js'
-import React, { useEffect, useState } from 'react'
+import React, { ReactNode, useEffect, useState } from 'react'
 import { useSampleClients } from '../../hooks/sampleData'
 import { Client } from '../../interfaces'
 import Button from '../Button'
@@ -10,8 +10,11 @@ import { useAxios } from '../../config'
 import {jwtDecode} from 'jwt-decode'
 import axios from 'axios'
 
+interface TableSampleClientsProps {
+  apiUrl: string;
 
-const TableSampleClients = () => {
+}
+const TableSampleClients = ({apiUrl}:TableSampleClientsProps) => {
   const { clients } = useSampleClients()
   const [siswa, setSiswa] = useState([])
   const [token,setToken] = useState<any>('')
@@ -22,9 +25,9 @@ const TableSampleClients = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await api.get("/users")
+        const response = await api.get(apiUrl)
         setSiswa(response.data)
-        console.log(response.data)
+        // console.log(response.data)
       } catch (error) {
         console.error('Error fetching data:', error)
       }
