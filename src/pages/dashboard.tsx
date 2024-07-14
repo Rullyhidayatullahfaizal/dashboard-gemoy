@@ -74,38 +74,6 @@ const DashboardPage = () => {
           
         </SectionTitleLineWithButton>
 
-        {/* <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 mb-6">
-          <CardBoxWidget
-            trendLabel="12%"
-            trendType="up"
-            trendColor="success"
-            icon={mdiAccountMultiple}
-            iconColor="success"
-            number={512}
-            label="Clients"
-          />
-          <CardBoxWidget
-            trendLabel="16%"
-            trendType="down"
-            trendColor="danger"
-            icon={mdiCartOutline}
-            iconColor="info"
-            number={7770}
-            numberPrefix="$"
-            label="Sales"
-          />
-          <CardBoxWidget
-            trendLabel="Overflow"
-            trendType="warning"
-            trendColor="warning"
-            icon={mdiChartTimelineVariant}
-            iconColor="danger"
-            number={256}
-            numberSuffix="%"
-            label="Performance"
-          />
-        </div> */}
-
         <div className="flex flex-cols-1 lg:flex-cols-2 gap-6 mb-6">
           <div className="flex flex-wrap justify-between">
             {combinedData.map((data:any, index:any) => (

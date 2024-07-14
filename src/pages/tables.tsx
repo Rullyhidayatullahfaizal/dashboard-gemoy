@@ -17,6 +17,7 @@ const TablesPage = () => {
   const [data, setData] = useState<any[]>([])
   const [selectedOption, setSelectedOption] = useState('guru')
   const [columns, setColumns] = useState<{ key: string; label: string }[]>([])
+  const [dataMakanan,setDataMakanan] = useState<any[]>([])
 
   const guruColumns = [
     { key: 'id', label: 'ID' },
@@ -29,6 +30,15 @@ const TablesPage = () => {
     { key: 'nama_kelas', label: 'Nama Kelas' },
     { key: 'name', label: 'Teacher Name' },
     { key: 'createdAt', label: 'Created At' },
+  ]
+
+  const makananColumns = [
+    { key: 'id', label: 'ID' },
+    { key: 'name', label: 'Nama Makanan' },
+    { key: 'image', label: 'Gambar' },
+    { key: 'description', label: 'Deskripsi' },
+    { key: 'createdAt', label: 'Created-At' },
+    { key: 'updatedAt', label: 'Updated-At' },
   ]
 
   const fetchData = async (option: string) => {
@@ -55,6 +65,23 @@ const TablesPage = () => {
     }
   }
 
+  const fetchDataMakanan = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/makanan')
+      if (Array.isArray(response.data)) {
+        setDataMakanan(response.data)
+      } else {
+        console.error('Unexpected data format:', response.data)
+        setDataMakanan([]) // Set an empty array to avoid errors
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error)
+      setDataMakanan([]) // Set an empty array to avoid errors
+    }
+  }
+  
+    
+
   useEffect(() => {
     if (selectedOption === 'guru') {
       setColumns(guruColumns)
@@ -62,6 +89,7 @@ const TablesPage = () => {
       setColumns(kelasColumns)
     }
     fetchData(selectedOption)
+    fetchDataMakanan()
   }, [selectedOption])
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -112,6 +140,14 @@ const TablesPage = () => {
 
         <CardBox>
           <TableSampleAdminstators columns={columns} data={data} />
+        </CardBox>
+
+        <NotificationBar color="info" icon={mdiTableOff}>
+          <b>Daftar-Makanan Sekolah</b> Mohon&apos;di Managed
+        </NotificationBar>
+
+        <CardBox>
+          <TableSampleAdminstators columns={makananColumns} data={dataMakanan} />
         </CardBox>
 
         <CardBox>

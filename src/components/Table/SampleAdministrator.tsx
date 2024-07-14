@@ -1,5 +1,5 @@
 import { mdiEye, mdiTrashCan } from '@mdi/js'
-import React, {  useState } from 'react'
+import React, { useState } from 'react'
 import Button from '../Button'
 import Buttons from '../Buttons'
 import CardBoxModal from '../CardBox/Modal'
@@ -12,8 +12,9 @@ interface TableSampleClientsProps {
 const TableSampleAdminstators = ({ columns, data }: TableSampleClientsProps) => {
   const perPage = 5
   const [currentPage, setCurrentPage] = useState(0)
-  const dataPaginated = data.slice(perPage * currentPage, perPage * (currentPage + 1))
-  const numPages = Math.ceil(data.length / perPage)
+  const validData = Array.isArray(data) ? data : []
+  const dataPaginated = validData.slice(perPage * currentPage, perPage * (currentPage + 1))
+  const numPages = Math.ceil(validData.length / perPage)
   const pagesList = Array.from({ length: numPages }, (_, i) => i)
 
   const [isModalInfoActive, setIsModalInfoActive] = useState(false)
@@ -58,7 +59,9 @@ const TableSampleAdminstators = ({ columns, data }: TableSampleClientsProps) => 
         <thead>
           <tr>
             {columns.map((column) => (
-              <th key={column.key}>{column.label}</th>
+              <th key={column.key} className={column.label === 'Gambar' ? 'text-center' : ''}>
+                {column.label}
+              </th>
             ))}
             <th>Actions</th>
           </tr>
@@ -68,7 +71,15 @@ const TableSampleAdminstators = ({ columns, data }: TableSampleClientsProps) => 
             <tr key={item.id}>
               {columns.map((column) => (
                 <td key={column.key} data-label={column.label}>
-                  {item[column.key]}
+                  {column.key === 'image' ? (
+                    <img
+                      src={`http://localhost:5000/${item[column.key]}`}
+                      alt="Image"
+                      style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+                    />
+                  ) : (
+                    item[column.key]
+                  )}
                 </td>
               ))}
               <td className="before:hidden lg:w-1 whitespace-nowrap">

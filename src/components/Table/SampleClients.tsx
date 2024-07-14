@@ -37,36 +37,41 @@ const TableSampleClients = ({apiUrl}:TableSampleClientsProps) => {
   }, [])
 
     const refreshToken = async () => {
-      try {
-        const response = await axios.get('http://localhost:5000/admin-token')
-        setToken(response.data.accesToken)
-        const decode = jwtDecode(response.data.accesToken)
-        setName(decode.iss)
-        setExpire(decode.exp)
+  try {
+    const response = await axios.get('http://localhost:5000/admin-token', {
+      withCredentials: true, // Ensure cookies are sent with the request
+    });
+    setToken(response.data.accessToken);
+    const decoded = jwtDecode(response.data.accessToken);
+    setName(decoded.iss);
+    setExpire(decoded.exp);
+  } catch (error) {
+    if (error.response) {
+      console.error('Error refreshing token:', error.response.data);
+    }
+  }
+};
 
-      } catch (error) {
-        if(error.response){
-          console.error()
-        }
+
+    const axiosJWT = axios.create();
+
+    axiosJWT.interceptors.request.use(async (config) => {
+      const currentDate = new Date();
+      if (expire * 15 < currentDate.getTime()) {
+        const response = await axios.get('http://localhost:5000/admin-token', {
+          withCredentials: true, // Ensure cookies are sent with the request
+        });
+        config.headers.Authorization = `Bearer ${response.data.accessToken}`;
+        setToken(response.data.accessToken);
+        const decoded = jwtDecode(response.data.accessToken);
+        setName(decoded.iss);
+        setExpire(decoded.exp);
       }
-    }
-
-  const axiosJWT = axios.create()
-
-  axiosJWT.interceptors.request.use(async(config) => {
-    const currentDate = new Date();
-    if (expire * 1000 < currentDate.getTime()) {
-        const response = await axios.get("http://localhost:5000/admin-token");
-        config.headers.Authorization = `Bearer ${response.data.accesToken}`;
-        setToken(response.data.accesToken);
-        const decoded = jwtDecode(response.data.accesToken);
-        setName(decoded.iss)
-        setExpire(decoded.exp)
-    }
-    return config
-  },(error) => {
-    return Promise.reject(error)
-  })
+      return config;
+    }, (error) => {
+      return Promise.reject(error);
+    });
+    
 
   const perPage = 5
   const [currentPage, setCurrentPage] = useState(0)
