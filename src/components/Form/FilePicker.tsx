@@ -1,23 +1,27 @@
-import { useState } from 'react'
-import { ColorButtonKey } from '../../interfaces'
-import Button from '../Button'
+import { useState } from 'react';
+import { ColorButtonKey } from '../../interfaces';
+import Button from '../Button';
 
 type Props = {
-  label?: string
-  icon?: string
-  accept?: string
-  color: ColorButtonKey
-  isRoundIcon?: boolean
-}
+  field?: any; // Field props from Formik
+  form?: any;  // Form props from Formik
+  label?: string;
+  icon?: string;
+  accept?: string;
+  color?: ColorButtonKey;
+  isRoundIcon?: boolean;
+};
 
-const FormFilePicker = ({ label, icon, accept, color, isRoundIcon }: Props) => {
-  const [file, setFile] = useState(null)
+const FormFilePicker = ({ field, form, label, icon, accept, color, isRoundIcon }: Props) => {
+  const [file, setFile] = useState(null);
 
   const handleFileChange = (event) => {
-    setFile(event.currentTarget.files[0])
-  }
+    const selectedFile = event.currentTarget.files[0];
+    setFile(selectedFile);
+    form.setFieldValue(field.name, selectedFile); // Set the file in Formik's state
+  };
 
-  const showFilename = !isRoundIcon && file
+  const showFilename = !isRoundIcon && file;
 
   return (
     <div className="flex items-stretch justify-start relative">
@@ -44,7 +48,7 @@ const FormFilePicker = ({ label, icon, accept, color, isRoundIcon }: Props) => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default FormFilePicker
+export default FormFilePicker;

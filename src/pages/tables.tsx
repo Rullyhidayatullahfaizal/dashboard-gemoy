@@ -36,6 +36,7 @@ const TablesPage = () => {
     { key: 'id', label: 'ID' },
     { key: 'name', label: 'Nama Makanan' },
     { key: 'image', label: 'Gambar' },
+    {key : 'price', label : "harga"},
     { key: 'description', label: 'Deskripsi' },
     { key: 'createdAt', label: 'Created-At' },
     { key: 'updatedAt', label: 'Updated-At' },
