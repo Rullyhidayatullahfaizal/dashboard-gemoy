@@ -3,13 +3,17 @@ import React, { useState } from 'react'
 import Button from '../Button'
 import Buttons from '../Buttons'
 import CardBoxModal from '../CardBox/Modal'
+import { Field, Form, Formik } from 'formik'
+import FormField from '../Form/Field'
+import Divider from '../Divider'
 
 interface TableSampleClientsProps {
   columns: Array<{ key: string; label: string }>
   data: any[]
+  type?: string // Add type prop to determine the form type
 }
 
-const TableSampleAdminstators = ({ columns, data }: TableSampleClientsProps) => {
+const TableSampleAdminstators = ({ columns, data,type }: TableSampleClientsProps) => {
   const perPage = 5
   const [currentPage, setCurrentPage] = useState(0)
   const validData = Array.isArray(data) ? data : []
@@ -19,26 +23,32 @@ const TableSampleAdminstators = ({ columns, data }: TableSampleClientsProps) => 
 
   const [isModalInfoActive, setIsModalInfoActive] = useState(false)
   const [isModalTrashActive, setIsModalTrashActive] = useState(false)
+  const [modalData, setModalData] = useState(null) // State to hold the data for the modal
+
 
   const handleModalAction = () => {
     setIsModalInfoActive(false)
     setIsModalTrashActive(false)
   }
 
+  const openInfoModal = (data:any) => {
+    setModalData(data)
+    setIsModalInfoActive(true)
+  }
+
   return (
     <>
       <CardBoxModal
-        title="Sample modal"
+        title="UPDATE DATA"
         buttonColor="info"
         buttonLabel="Done"
         isActive={isModalInfoActive}
         onConfirm={handleModalAction}
         onCancel={handleModalAction}
+        type={type}
+        data={modalData}
       >
-        <p>
-          Lorem ipsum dolor sit amet <b>adipiscing elit</b>
-        </p>
-        <p>This is sample modal</p>
+         
       </CardBoxModal>
 
       <CardBoxModal

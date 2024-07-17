@@ -140,7 +140,7 @@ const TablesPage = () => {
         </NotificationBar>
 
         <CardBox>
-          <TableSampleAdminstators columns={columns} data={data} />
+          <TableSampleAdminstators columns={columns} data={data} type={selectedOption}  />
         </CardBox>
 
         <NotificationBar color="info" icon={mdiTableOff}>
@@ -148,7 +148,7 @@ const TablesPage = () => {
         </NotificationBar>
 
         <CardBox>
-          <TableSampleAdminstators columns={makananColumns} data={dataMakanan} />
+          <TableSampleAdminstators columns={makananColumns} data={dataMakanan} type='makanan' />
         </CardBox>
 
         <CardBox>
