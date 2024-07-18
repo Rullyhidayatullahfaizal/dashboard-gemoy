@@ -1,4 +1,4 @@
-import { mdiEye, mdiTrashCan } from '@mdi/js'
+import { mdiAccountCog,  mdiTrashCan } from '@mdi/js'
 import React, { useState } from 'react'
 import Button from '../Button'
 import Buttons from '../Buttons'
@@ -10,12 +10,14 @@ import Divider from '../Divider'
 interface TableSampleClientsProps {
   columns: Array<{ key: string; label: string }>
   data: any[]
-  type?: string // Add type prop to determine the form type
+  type?: string
+  onUpdateData?: (updatedData: any) => void // Tambahkan prop onUpdateData 
 }
 
-const TableSampleAdminstators = ({ columns, data,type }: TableSampleClientsProps) => {
+const TableSampleAdminstators = ({ columns, data,type,onUpdateData }: TableSampleClientsProps) => {
   const perPage = 5
   const [currentPage, setCurrentPage] = useState(0)
+  const [dataUpdate, setDataUpdate] = useState(data)
   const validData = Array.isArray(data) ? data : []
   const dataPaginated = validData.slice(perPage * currentPage, perPage * (currentPage + 1))
   const numPages = Math.ceil(validData.length / perPage)
@@ -23,7 +25,7 @@ const TableSampleAdminstators = ({ columns, data,type }: TableSampleClientsProps
 
   const [isModalInfoActive, setIsModalInfoActive] = useState(false)
   const [isModalTrashActive, setIsModalTrashActive] = useState(false)
-  const [modalData, setModalData] = useState(null) // State to hold the data for the modal
+  const [modalData, setModalData] = useState(null) 
 
 
   const handleModalAction = () => {
@@ -33,20 +35,32 @@ const TableSampleAdminstators = ({ columns, data,type }: TableSampleClientsProps
 
   const openInfoModal = (data:any) => {
     setModalData(data)
+    console.log(modalData)
     setIsModalInfoActive(true)
+  }
+
+  const handleUpdateData = (updatedData: any) => {
+    setDataUpdate(prevData =>
+      prevData.map(item => (item.id === updatedData.id ? updatedData : item))
+    )
+    setIsModalInfoActive(false)
+    if (onUpdateData) {
+      onUpdateData(updatedData) // Memanggil onUpdateData untuk memperbarui state di TablesPage
+    }
   }
 
   return (
     <>
       <CardBoxModal
-        title="UPDATE DATA"
-        buttonColor="info"
-        buttonLabel="Done"
-        isActive={isModalInfoActive}
-        onConfirm={handleModalAction}
-        onCancel={handleModalAction}
-        type={type}
-        data={modalData}
+         title="UPDATE DATA"
+         buttonColor="info"
+         buttonLabel="Done"
+         isActive={isModalInfoActive}
+         onConfirm={() => {}}
+         onCancel={handleModalAction}
+         type={type}
+         data={modalData}
+         onUpdateData={handleUpdateData} // Pass update function to modal
       >
          
       </CardBoxModal>
@@ -96,8 +110,8 @@ const TableSampleAdminstators = ({ columns, data,type }: TableSampleClientsProps
                 <Buttons type="justify-start lg:justify-end" noWrap>
                   <Button
                     color="info"
-                    icon={mdiEye}
-                    onClick={() => setIsModalInfoActive(true)}
+                    icon={mdiAccountCog}
+                    onClick={() => openInfoModal(item)}
                     small
                   />
                   <Button

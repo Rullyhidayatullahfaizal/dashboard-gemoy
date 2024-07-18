@@ -1,4 +1,4 @@
-import { mdiClose } from '@mdi/js'
+import { mdiClose, mdiUpload } from '@mdi/js'
 import { ReactNode } from 'react'
 import type { ColorButtonKey } from '../../interfaces'
 import Button from '../Button'
@@ -9,6 +9,8 @@ import OverlayLayer from '../OverlayLayer'
 import { Field, Form, Formik } from 'formik'
 import FormField from '../Form/Field'
 import Divider from '../Divider'
+import FormFilePicker from '../Form/FilePicker'
+import axios from 'axios'
 
 type Props = {
   title: string
@@ -18,8 +20,9 @@ type Props = {
   children?: ReactNode
   onConfirm: () => void
   onCancel?: () => void
-  type?: string 
+  type?: string
   data?: any
+  onUpdateData?: (data: any) => void
 }
 
 const CardBoxModal = ({
@@ -31,18 +34,59 @@ const CardBoxModal = ({
   onCancel,
   type,
   data,
-  
+  onUpdateData,
 }: Props) => {
   if (!isActive) {
     return null
   }
 
   const footer = (
-    <Buttons className=''>
-      <Button label={buttonLabel} color={buttonColor} onClick={onConfirm} />
-      {!!onCancel && <Button label="Cancel" color={buttonColor} outline onClick={onCancel} />}
+    <Buttons className="">
+      {type !== 'guru' &&
+        type !== 'kelas' &&
+        type !== 'makanan' &&
+        !!onCancel && (
+          <>
+            <Button label="Cancel" color={buttonColor} outline onClick={onCancel} />
+            <Button label={buttonLabel} color={buttonColor} onClick={onConfirm} />
+          </>
+        )}
     </Buttons>
   )
+
+  const handleSubmit = async (values: any, { setSubmitting }: any) => {
+    try {
+      let url = `http://localhost:5000/${type}/${values.id}`
+      let updatedValues = { ...values }
+
+      if (type === 'kelas') {
+        updatedValues = {
+          ...values,
+          nama_walikelas: values.name, 
+        }
+        delete updatedValues.name 
+      }
+
+      const response = await axios.put(url, updatedValues)
+      console.log(response)
+      // Remap nama_walikelas back to name after receiving the response
+      if (type === 'kelas') {
+        updatedValues = {
+          ...updatedValues,
+          name: updatedValues.nama_walikelas,
+        }
+        delete updatedValues.nama_walikelas
+      }
+
+      if (onUpdateData) onUpdateData(updatedValues) // Call the update function with the new data
+      onConfirm() // Close modal after success
+    } catch (error) {
+      console.error('Failed to submit form', error)
+      alert('Failed to submit form')
+    } finally {
+      setSubmitting(false)
+    }
+  }
 
   const renderForm = () => {
     switch (type) {
@@ -52,30 +96,21 @@ const CardBoxModal = ({
             initialValues={{
               id: data?.id || '',
               name: data?.name || '',
+              createdAt: data?.createdAt || "testing",
             }}
-            onSubmit={async (values, { setSubmitting }) => {
-              try {
-                // await axios.post('http://localhost:5000/guru', values)
-                // router.push('/tables') // Redirect to /table after successful submission
-              } catch (error) {
-                console.error(error)
-                alert('Failed to submit form')
-              } finally {
-                setSubmitting(false)
-              }
-            }}
+            onSubmit={handleSubmit}
           >
             <Form>
               <FormField label="ID">
                 <Field name="id" placeholder="79" />
               </FormField>
-      
+
               <FormField label="Nama">
                 <Field name="name" placeholder="Coach Justin" />
               </FormField>
-      
+
               <Divider />
-      
+
               <Buttons>
                 <Button type="submit" color="info" label="Submit" />
                 <Button type="reset" color="info" outline label="Reset" />
@@ -89,35 +124,27 @@ const CardBoxModal = ({
             initialValues={{
               id: data?.id || '',
               nama_kelas: data?.nama_kelas || '',
-              teacher_name: data?.name || '',
+              name: data?.name || '',
+              createdAt: data?.createdAt || "testing",
+
             }}
-            onSubmit={async (values, { setSubmitting }) => {
-              try {
-                // await axios.post('http://localhost:5000/kelas', values)
-                // router.push('/tables') // Redirect to /table after successful submission
-              } catch (error) {
-                console.error(error)
-                alert('Failed to submit form')
-              } finally {
-                setSubmitting(false)
-              }
-            }}
+            onSubmit={handleSubmit}
           >
             <Form>
               <FormField label="ID">
                 <Field name="id" placeholder="123" />
               </FormField>
-      
+
               <FormField label="Nama Kelas">
                 <Field name="nama_kelas" placeholder="Nama Kelas" />
               </FormField>
-      
-              <FormField label="Wali Kelas">
-                <Field name="teacher_name" placeholder="Nama Wali Kelas" />
+
+              <FormField label="Nama Wali Kelas">
+                <Field name="name" placeholder="Nama Wali Kelas" />
               </FormField>
-      
+
               <Divider />
-      
+
               <Buttons>
                 <Button type="submit" color="info" label="Submit" />
                 <Button type="reset" color="info" outline label="Reset" />
@@ -135,41 +162,41 @@ const CardBoxModal = ({
               description: data?.description || '',
               image: data?.image || '',
             }}
-            onSubmit={async (values, { setSubmitting }) => {
-              try {
-                // await axios.post('http://localhost:5000/makanan', values)
-                // router.push('/tables') // Redirect to /table after successful submission
-              } catch (error) {
-                console.error(error)
-                alert('Failed to submit form')
-              } finally {
-                setSubmitting(false)
-              }
-            }}
+            onSubmit={handleSubmit}
           >
             <Form>
-              <FormField label="ID">
-                <Field name="id" placeholder="123" />
-              </FormField>
-      
+
               <FormField label="Nama Makanan">
-                <Field name="name" placeholder="Nama Makanan" />
+                  <Field name="name" placeholder="Nama Makanan" />
               </FormField>
-      
+              <div className="grid grid-cols-2 gap-5">
+               
+
+                
+              </div>
+
               <FormField label="Harga">
                 <Field name="price" placeholder="Harga" />
               </FormField>
-      
+
               <FormField label="Deskripsi">
                 <Field name="description" placeholder="Deskripsi" />
               </FormField>
-      
-              <FormField label="Gambar">
-                <Field name="image" placeholder="Upload Gambar" />
+
+              <FormField>
+                {/* FormFilePicker untuk memilih file gambar */}
+                <Field
+                  name="image"
+                  component={FormFilePicker}
+                  label="Upload Image"
+                  color="info"
+                  icon={mdiUpload}
+                  accept="image/*"
+                />
               </FormField>
-      
+
               <Divider />
-      
+
               <Buttons>
                 <Button type="submit" color="info" label="Submit" />
                 <Button type="reset" color="info" outline label="Reset" />
@@ -195,7 +222,7 @@ const CardBoxModal = ({
           )}
         </CardBoxComponentTitle>
 
-        <div className="space-y-3">{renderForm()}</div>  
+        <div className="space-y-3">{renderForm()}</div>
         {/* <div className="space-y-3">{children}</div> */}
       </CardBox>
     </OverlayLayer>

@@ -97,6 +97,12 @@ const TablesPage = () => {
     setSelectedOption(e.target.value)
   }
 
+  const handleUpdateData = (updatedData: any) => {
+    setData(prevData =>
+      prevData.map(item => (item.id === updatedData.id ? updatedData : item))
+    )
+  }
+
   return (
     <>
       <Head>
@@ -140,7 +146,7 @@ const TablesPage = () => {
         </NotificationBar>
 
         <CardBox>
-          <TableSampleAdminstators columns={columns} data={data} type={selectedOption}  />
+          <TableSampleAdminstators columns={columns} data={data} type={selectedOption} onUpdateData={handleUpdateData}  />
         </CardBox>
 
         <NotificationBar color="info" icon={mdiTableOff}>
