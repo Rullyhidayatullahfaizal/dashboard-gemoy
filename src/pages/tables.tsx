@@ -38,7 +38,7 @@ const TablesPage = () => {
     { key: 'image', label: 'Gambar' },
     {key : 'price', label : "harga"},
     { key: 'description', label: 'Deskripsi' },
-    { key: 'createdAt', label: 'Created-At' },
+    { key: 'start_date', label: 'Created-At' },
     { key: 'updatedAt', label: 'Updated-At' },
   ]
 
@@ -69,6 +69,7 @@ const TablesPage = () => {
   const fetchDataMakanan = async () => {
     try {
       const response = await axios.get('http://localhost:5000/makanan')
+      // console.log(response)
       if (Array.isArray(response.data)) {
         setDataMakanan(response.data)
       } else {
@@ -97,10 +98,16 @@ const TablesPage = () => {
     setSelectedOption(e.target.value)
   }
 
-  const handleUpdateData = (updatedData: any) => {
-    setData(prevData =>
-      prevData.map(item => (item.id === updatedData.id ? updatedData : item))
-    )
+  const handleUpdateData = (updatedData: any, type: string) => {
+    if (type === 'makanan') {
+      setDataMakanan((prevData) =>
+        prevData.map((item) => (item.id === updatedData.id ? updatedData : item))
+      )
+    } else {
+      setData((prevData) =>
+        prevData.map((item) => (item.id === updatedData.id ? updatedData : item))
+      )
+    }
   }
 
   return (
@@ -154,7 +161,7 @@ const TablesPage = () => {
         </NotificationBar>
 
         <CardBox>
-          <TableSampleAdminstators columns={makananColumns} data={dataMakanan} type='makanan' />
+          <TableSampleAdminstators columns={makananColumns} data={dataMakanan} type='makanan' onUpdateData={handleUpdateData} />
         </CardBox>
 
         <CardBox>

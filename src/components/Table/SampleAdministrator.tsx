@@ -11,7 +11,7 @@ interface TableSampleClientsProps {
   columns: Array<{ key: string; label: string }>
   data: any[]
   type?: string
-  onUpdateData?: (updatedData: any) => void // Tambahkan prop onUpdateData 
+  onUpdateData?: (updatedData: any,type:string) => void // Tambahkan prop onUpdateData 
 }
 
 const TableSampleAdminstators = ({ columns, data,type,onUpdateData }: TableSampleClientsProps) => {
@@ -35,7 +35,7 @@ const TableSampleAdminstators = ({ columns, data,type,onUpdateData }: TableSampl
 
   const openInfoModal = (data:any) => {
     setModalData(data)
-    console.log(modalData)
+    // console.log(modalData)
     setIsModalInfoActive(true)
   }
 
@@ -45,7 +45,7 @@ const TableSampleAdminstators = ({ columns, data,type,onUpdateData }: TableSampl
     )
     setIsModalInfoActive(false)
     if (onUpdateData) {
-      onUpdateData(updatedData) // Memanggil onUpdateData untuk memperbarui state di TablesPage
+      onUpdateData(updatedData  ,type) // Memanggil onUpdateData untuk memperbarui state di TablesPage
     }
   }
 

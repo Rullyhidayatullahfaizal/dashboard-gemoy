@@ -66,6 +66,7 @@ const CardBoxModal = ({
         }
         delete updatedValues.name 
       }
+      
 
       const response = await axios.put(url, updatedValues)
       console.log(response)
@@ -78,6 +79,8 @@ const CardBoxModal = ({
         delete updatedValues.nama_walikelas
       }
 
+      
+
       if (onUpdateData) onUpdateData(updatedValues) // Call the update function with the new data
       onConfirm() // Close modal after success
     } catch (error) {
@@ -87,7 +90,39 @@ const CardBoxModal = ({
       setSubmitting(false)
     }
   }
+  const handleSubmitMakanan = async (values: any, { setSubmitting }: any) => {
+    try {
+      const formData = new FormData();
+      formData.append('id', values.id);
+      formData.append('name', values.name);
+      formData.append('price', values.price);
+      formData.append('description', values.description);
+      formData.append('image', values.image); // Adding file image to FormData
+      formData.append('start_date', values.start_date);
+      formData.append('updatedAt', values.updatedAt);
 
+      const url = `http://localhost:5000/makanan/${values.id}`;
+
+      const response = await axios.put(url, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      // console.log(response);
+
+      if (onUpdateData) {
+        // Use the updated data returned from the response
+        onUpdateData(response.data);
+      }
+      onConfirm(); // Close modal after success
+    } catch (error) {
+      console.error('Failed to submit form', error);
+      alert('Failed to submit form');
+    } finally {
+      setSubmitting(false);
+    }
+  }
   const renderForm = () => {
     switch (type) {
       case 'guru':
@@ -161,9 +196,12 @@ const CardBoxModal = ({
               price: data?.price || '',
               description: data?.description || '',
               image: data?.image || '',
+              start_date:data?.start_date || "",
+              updatedAt:data?.updatedAt || ""
             }}
-            onSubmit={handleSubmit}
+            onSubmit={handleSubmitMakanan}
           >
+            {({ setFieldValue }) => (
             <Form>
 
               <FormField label="Nama Makanan">
@@ -192,6 +230,9 @@ const CardBoxModal = ({
                   color="info"
                   icon={mdiUpload}
                   accept="image/*"
+                  onChange={(event: any) => {
+                    setFieldValue("image", event.currentTarget.files[0]);
+                  }}
                 />
               </FormField>
 
@@ -202,6 +243,7 @@ const CardBoxModal = ({
                 <Button type="reset" color="info" outline label="Reset" />
               </Buttons>
             </Form>
+             )}
           </Formik>
         )
       default:
