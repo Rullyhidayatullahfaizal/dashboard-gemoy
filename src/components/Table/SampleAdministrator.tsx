@@ -12,9 +12,11 @@ interface TableSampleClientsProps {
   data: any[]
   type?: string
   onUpdateData?: (updatedData: any,type:string) => void // Tambahkan prop onUpdateData 
+  onDelete?: (id: string, type: string) => void // Add onDelete prop
+
 }
 
-const TableSampleAdminstators = ({ columns, data,type,onUpdateData }: TableSampleClientsProps) => {
+const TableSampleAdminstators = ({ columns, data,type,onUpdateData,onDelete  }: TableSampleClientsProps) => {
   const perPage = 5
   const [currentPage, setCurrentPage] = useState(0)
   const [dataUpdate, setDataUpdate] = useState(data)
@@ -49,6 +51,20 @@ const TableSampleAdminstators = ({ columns, data,type,onUpdateData }: TableSampl
     }
   }
 
+  const handleDeleteConfirm = () => {
+    if (modalData && onDelete) {
+      onDelete(modalData.id, type || '')
+    }
+    handleModalAction()
+  }
+
+  const formatRupiah = (amount:any) => {
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+    }).format(amount);
+  };
+
   return (
     <>
       <CardBoxModal
@@ -70,13 +86,14 @@ const TableSampleAdminstators = ({ columns, data,type,onUpdateData }: TableSampl
         buttonColor="danger"
         buttonLabel="Confirm"
         isActive={isModalTrashActive}
-        onConfirm={handleModalAction}
-        onCancel={handleModalAction}
+        data={modalData}
+        onConfirm={handleDeleteConfirm}
+        onCancel={() => setIsModalTrashActive(false)}
       >
-        <p>
-          Lorem ipsum dolor sit amet <b>adipiscing elit</b>
+        <p className='font-semibold text-gray-600'>
+          Apakah anda yakin ingin <b className='text-red-900'>meghapusnya </b> ?
         </p>
-        <p>This is sample modal</p>
+        
       </CardBoxModal>
 
       <table>
@@ -101,6 +118,8 @@ const TableSampleAdminstators = ({ columns, data,type,onUpdateData }: TableSampl
                       alt="Image"
                       style={{ width: '100px', height: '100px', objectFit: 'cover' }}
                     />
+                  ) : column.key === 'price' ? (
+                    formatRupiah(item[column.key])
                   ) : (
                     item[column.key]
                   )}
@@ -111,13 +130,17 @@ const TableSampleAdminstators = ({ columns, data,type,onUpdateData }: TableSampl
                   <Button
                     color="info"
                     icon={mdiAccountCog}
-                    onClick={() => openInfoModal(item)}
+                    onClick={() =>{
+                    openInfoModal(item)} }
                     small
                   />
                   <Button
                     color="danger"
                     icon={mdiTrashCan}
-                    onClick={() => setIsModalTrashActive(true)}
+                    onClick={() => {
+                      setModalData(item)
+                      setIsModalTrashActive(true)
+                    }}
                     small
                   />
                 </Buttons>

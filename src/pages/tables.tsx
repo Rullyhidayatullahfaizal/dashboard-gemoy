@@ -1,4 +1,4 @@
-import { mdiAccountBox, mdiMonitorCellphone, mdiTableBorder, mdiTableOff } from '@mdi/js'
+import { mdiAccountBox, mdiCheckCircle, mdiMonitorCellphone, mdiTableBorder, mdiTableOff } from '@mdi/js'
 import Head from 'next/head'
 import React, { ReactElement, useEffect, useState } from 'react'
 import Button from '../components/Button'
@@ -18,6 +18,8 @@ const TablesPage = () => {
   const [selectedOption, setSelectedOption] = useState('guru')
   const [columns, setColumns] = useState<{ key: string; label: string }[]>([])
   const [dataMakanan,setDataMakanan] = useState<any[]>([])
+  const [showNotification, setShowNotification] = useState(false)
+  const [notificationMessage, setNotificationMessage] = useState('')
 
   const guruColumns = [
     { key: 'id', label: 'ID' },
@@ -108,6 +110,31 @@ const TablesPage = () => {
         prevData.map((item) => (item.id === updatedData.id ? updatedData : item))
       )
     }
+    showTemporaryNotification('Data updated successfully!')
+  }
+
+   const handleDelete = async (id: string, type: string) => {
+    try {
+      console.log(`Attempting to delete ${type} with id: ${id}`)
+      const response = await axios.delete(`http://localhost:5000/${type}/${id}`)
+      console.log('Delete response:', response)
+
+      if (type === 'makanan') {
+        setDataMakanan(prevData => prevData.filter(item => item.id !== id))
+      } else {
+        setData(prevData => prevData.filter(item => item.id !== id))
+      }
+      showTemporaryNotification('Data deleted successfully!')
+    } catch (error) {
+      console.error('Failed to delete data', error)
+      alert('Failed to delete data')
+    }
+  }
+
+  const showTemporaryNotification = (message: string) => {
+    setNotificationMessage(message)
+    setShowNotification(true)
+    setTimeout(() => setShowNotification(false), 3000) // Show notification for 3 seconds
   }
 
   return (
@@ -153,7 +180,7 @@ const TablesPage = () => {
         </NotificationBar>
 
         <CardBox>
-          <TableSampleAdminstators columns={columns} data={data} type={selectedOption} onUpdateData={handleUpdateData}  />
+          <TableSampleAdminstators columns={columns} data={data} type={selectedOption} onUpdateData={handleUpdateData} onDelete={handleDelete} />
         </CardBox>
 
         <NotificationBar color="info" icon={mdiTableOff}>
@@ -161,8 +188,14 @@ const TablesPage = () => {
         </NotificationBar>
 
         <CardBox>
-          <TableSampleAdminstators columns={makananColumns} data={dataMakanan} type='makanan' onUpdateData={handleUpdateData} />
+          <TableSampleAdminstators columns={makananColumns} data={dataMakanan} type='makanan' onUpdateData={handleUpdateData} onDelete={handleDelete} />
         </CardBox>
+
+        {showNotification && (
+          <NotificationBar color="success" icon={mdiCheckCircle} fixed>
+            {notificationMessage}
+          </NotificationBar>
+        )}
 
         <CardBox>
           <CardBoxComponentEmpty />

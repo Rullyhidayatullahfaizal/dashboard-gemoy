@@ -35,6 +35,7 @@ const CardBoxModal = ({
   type,
   data,
   onUpdateData,
+  children,
 }: Props) => {
   if (!isActive) {
     return null
@@ -47,8 +48,10 @@ const CardBoxModal = ({
         type !== 'makanan' &&
         !!onCancel && (
           <>
+            <div className='grid grid-cols-2 gap-5'>
             <Button label="Cancel" color={buttonColor} outline onClick={onCancel} />
             <Button label={buttonLabel} color={buttonColor} onClick={onConfirm} />
+            </div>
           </>
         )}
     </Buttons>
@@ -265,7 +268,7 @@ const CardBoxModal = ({
         </CardBoxComponentTitle>
 
         <div className="space-y-3">{renderForm()}</div>
-        {/* <div className="space-y-3">{children}</div> */}
+        <div className="space-y-3">{children}</div>
       </CardBox>
     </OverlayLayer>
   )

@@ -7,6 +7,7 @@ import { mdiUpload } from "@mdi/js";
 import Divider from "../Divider";
 import Buttons from "../Buttons";
 import Button from "../Button";
+import NumberFormatCustom from "./NumberFormat";
 
 
 const MakananForm = () => {
@@ -58,7 +59,7 @@ const MakananForm = () => {
                 <Field name="name" placeholder="Nama makanan" />
               </FormField>
               <FormField label="Harga">
-                <Field name="price" placeholder="Rp...." />
+                <Field name="price" component={NumberFormatCustom} placeholder="Rp...." />
               </FormField>
             </div>
   

@@ -11,9 +11,10 @@ type Props = {
   outline?: boolean
   children: ReactNode
   button?: ReactNode
+  fixed?: boolean
 }
 
-const NotificationBar = ({ outline = false, children, ...props }: Props) => {
+const NotificationBar = ({ outline = false, fixed = false, children, ...props }: Props) => {
   const componentColorClass = outline ? colorsOutline[props.color] : colorsBgLight[props.color]
 
   const [isDismissed, setIsDismissed] = useState(false)
@@ -30,7 +31,9 @@ const NotificationBar = ({ outline = false, children, ...props }: Props) => {
 
   return (
     <div
-      className={`px-3 py-6 md:py-3 mb-6 last:mb-0 border rounded-lg transition-colors duration-150 ${componentColorClass}`}
+      className={`px-3 py-6 md:py-3 mb-6 last:mb-0 border rounded-lg transition-colors duration-150 ${componentColorClass} ${
+        fixed ? 'fixed top-20 w-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50' : ''
+      }`}
     >
       <div className="flex flex-col md:flex-row items-center justify-between">
         <div className="flex flex-col md:flex-row items-center mb-6 md:mb-0">
