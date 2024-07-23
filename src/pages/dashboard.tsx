@@ -26,6 +26,7 @@ import NotificationBar from '../components/NotificationBar'
 import TableSampleClients from '../components/Table/SampleClients'
 import { getPageTitle } from '../config'
 import axios from 'axios'
+import { BubbleChat } from 'flowise-embed-react'
 
 const DashboardPage = () => {
   const { clients } = useSampleClients()
@@ -101,7 +102,12 @@ const DashboardPage = () => {
         <CardBox hasTable>
           <TableSampleClients apiUrl='/users' />
         </CardBox>
+        <div className='bg-black'>
+      <BubbleChat chatflowid="0604d0d9-f26b-4d1a-925c-439cb49821ba" apiHost="http://localhost:3000" />
+
+      </div>
       </SectionMain>
+      
     </>
   )
 }

@@ -20,7 +20,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   // Use the layout defined at the page level, if available
   const getLayout = Component.getLayout || ((page) => page)
 
-  const title = `Admin One React Tailwind free`
+  const title = `Admin Dashboard Gemoy`
 
   const description = 'Admin One - free React Next Tailwind dashboard with TypeScript and dark mode'
 
@@ -71,6 +71,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
               gtag('config', 'UA-130795909-1');
             `}
           </Script>
+
 
           <Component {...pageProps} />
         </>
