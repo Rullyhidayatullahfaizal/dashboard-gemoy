@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react'
 
 type Props = {
-  path: string
+  path: string | any
   w?: string
   h?: string
   size?: string | number | null

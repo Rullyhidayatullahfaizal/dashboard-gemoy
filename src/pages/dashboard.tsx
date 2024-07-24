@@ -1,14 +1,12 @@
 import {
   mdiAccountMultiple,
-  
   mdiChartPie,
   mdiChartTimelineVariant,
-  
   mdiMonitorCellphone,
   mdiReload,
 } from '@mdi/js'
 import Head from 'next/head'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import type { ReactElement } from 'react'
 import Button from '../components/Button'
 import LayoutAuthenticated from '../layouts/Authenticated'
@@ -31,7 +29,10 @@ import { BubbleChat } from 'flowise-embed-react'
 const DashboardPage = () => {
   const { clients } = useSampleClients()
   const { transactions } = useSampleTransactions()
-  const [report,setReport] = useState<ReportTranksasi[]>([])
+  const [report, setReport] = useState<ReportTranksasi[]>([])
+
+
+
 
   useEffect(() => {
     const fetchReport = async () => {
@@ -43,9 +44,13 @@ const DashboardPage = () => {
         console.error('Error fetching report:', error)
       }
     }
+   
 
     fetchReport()
   }, [])
+
+
+
 
   const clientsListed = clients.slice(0, 8)
 
@@ -57,7 +62,7 @@ const DashboardPage = () => {
     setChartData(sampleChartData())
   }
 
-  const combinedData = clientsListed.map((client:any) => {
+  const combinedData = clientsListed.map((client: any) => {
     const clientReport = report.find((r) => r.id === client.id)
     return {
       ...client,
@@ -71,21 +76,21 @@ const DashboardPage = () => {
         <title>{getPageTitle('Dashboard')}</title>
       </Head>
       <SectionMain>
-        <SectionTitleLineWithButton icon={mdiChartTimelineVariant} title="Transaksi" main>
-          
-        </SectionTitleLineWithButton>
+        <SectionTitleLineWithButton
+          icon={mdiChartTimelineVariant}
+          title="Transaksi"
+          main
+        ></SectionTitleLineWithButton>
 
         <div className="flex flex-cols-1 lg:flex-cols-2 gap-6 mb-6">
           <div className="flex flex-wrap justify-between">
-            {combinedData.map((data:any, index:any) => (
-              <CardBoxClient key={index} client={data}  />
+            {combinedData.map((data: any, index: any) => (
+              <CardBoxClient key={index} client={data} />
             ))}
           </div>
         </div>
 
-        <div className="my-6">
-          
-        </div>
+        <div className="my-6"></div>
 
         <SectionTitleLineWithButton icon={mdiChartPie} title="Trends overview">
           <Button icon={mdiReload} color="whiteDark" onClick={fillChartData} />
@@ -100,14 +105,23 @@ const DashboardPage = () => {
         </NotificationBar>
 
         <CardBox hasTable>
-          <TableSampleClients apiUrl='/users' />
+          <TableSampleClients apiUrl="/users" />
         </CardBox>
-        <div className='bg-black'>
-      <BubbleChat chatflowid="0604d0d9-f26b-4d1a-925c-439cb49821ba" apiHost="http://localhost:3000" />
+        <BubbleChat chatflowid="4d5f6294-ecfa-4c83-8c62-ebe33e757724" apiHost="http://localhost:3000" 
+          theme={{
+            chatWindow:{
+              title:'General Data',
+              footer:{
+                textColor: '#303235',
+                        text: 'Gemoy',
+                        company: 'ChatBot',
+                        companyLink: 'https://flowiseai.com',
+              }
+            }
+          }}     
+         />
 
-      </div>
       </SectionMain>
-      
     </>
   )
 }

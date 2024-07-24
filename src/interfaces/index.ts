@@ -1,3 +1,5 @@
+import { ReactNode } from 'react';
+
 export type UserPayloadObject = {
   name: string
   email: string
@@ -5,7 +7,7 @@ export type UserPayloadObject = {
 
 export type MenuAsideItem = {
   label: string
-  icon?: string
+  icon?: string | ReactNode;
   href?: string
   target?: string
   color?: ColorButtonKey

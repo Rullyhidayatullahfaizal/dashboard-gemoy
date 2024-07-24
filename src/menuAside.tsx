@@ -11,8 +11,10 @@ import {
   mdiResponsive,
   mdiPalette,
   mdiVuejs,
+  mdiWebBox,
 } from '@mdi/js'
 import { MenuAsideItem } from './interfaces'
+
 
 const menuAside: MenuAsideItem[] = [
   {
@@ -30,6 +32,12 @@ const menuAside: MenuAsideItem[] = [
     label: 'Forms',
     icon: mdiSquareEditOutline,
   },
+  {
+    href:'/ai',
+    label:'AI-Artificial',
+    icon: mdiWebBox, 
+  }
+  ,
   {
     href: '/ui',
     label: 'UI',
