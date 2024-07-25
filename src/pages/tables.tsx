@@ -1,4 +1,10 @@
-import { mdiAccountBox, mdiCheckCircle, mdiMonitorCellphone, mdiTableBorder, mdiTableOff } from '@mdi/js'
+import {
+  mdiAccountBox,
+  mdiCheckCircle,
+  mdiMonitorCellphone,
+  mdiTableBorder,
+  mdiTableOff,
+} from '@mdi/js'
 import Head from 'next/head'
 import React, { ReactElement, useEffect, useState } from 'react'
 import Button from '../components/Button'
@@ -12,12 +18,13 @@ import TableSampleClients from '../components/Table/SampleClients'
 import { getPageTitle } from '../config'
 import TableSampleAdminstators from '../components/Table/SampleAdministrator'
 import axios from 'axios'
+import { BubbleChat } from 'flowise-embed-react'
 
 const TablesPage = () => {
   const [data, setData] = useState<any[]>([])
   const [selectedOption, setSelectedOption] = useState('guru')
   const [columns, setColumns] = useState<{ key: string; label: string }[]>([])
-  const [dataMakanan,setDataMakanan] = useState<any[]>([])
+  const [dataMakanan, setDataMakanan] = useState<any[]>([])
   const [showNotification, setShowNotification] = useState(false)
   const [notificationMessage, setNotificationMessage] = useState('')
 
@@ -38,7 +45,7 @@ const TablesPage = () => {
     { key: 'id', label: 'ID' },
     { key: 'name', label: 'Nama Makanan' },
     { key: 'image', label: 'Gambar' },
-    {key : 'price', label : "harga"},
+    { key: 'price', label: 'harga' },
     { key: 'description', label: 'Deskripsi' },
     { key: 'start_date', label: 'Created-At' },
     { key: 'updatedAt', label: 'Updated-At' },
@@ -54,7 +61,7 @@ const TablesPage = () => {
         const formattedData = fetchedData.map((item: any) => ({
           id: item.id,
           name: item.guru.name,
-          nama_kelas:item.nama_kelas,
+          nama_kelas: item.nama_kelas,
           createdAt: item.createdAt,
         }))
         setData(formattedData)
@@ -83,8 +90,6 @@ const TablesPage = () => {
       setDataMakanan([]) // Set an empty array to avoid errors
     }
   }
-  
-    
 
   useEffect(() => {
     if (selectedOption === 'guru') {
@@ -113,16 +118,16 @@ const TablesPage = () => {
     showTemporaryNotification('Data updated successfully!')
   }
 
-   const handleDelete = async (id: string, type: string) => {
+  const handleDelete = async (id: string, type: string) => {
     try {
       console.log(`Attempting to delete ${type} with id: ${id}`)
       const response = await axios.delete(`http://localhost:5000/${type}/${id}`)
       console.log('Delete response:', response)
 
       if (type === 'makanan') {
-        setDataMakanan(prevData => prevData.filter(item => item.id !== id))
+        setDataMakanan((prevData) => prevData.filter((item) => item.id !== id))
       } else {
-        setData(prevData => prevData.filter(item => item.id !== id))
+        setData((prevData) => prevData.filter((item) => item.id !== id))
       }
       showTemporaryNotification('Data deleted successfully!')
     } catch (error) {
@@ -162,11 +167,11 @@ const TablesPage = () => {
         <CardBox className="mb-6" hasTable>
           <TableSampleClients apiUrl="users" />
         </CardBox>
-        
-        <div className='flex justify-between'>
+
+        <div className="flex justify-between">
           <SectionTitleLineWithButton title="Administrasi Sekolah" />
-          <select 
-            className='border-black px-8 hover:bg-red-400 font-semibold border-2 hover:text-white mt-7 rounded h-10' 
+          <select
+            className="border-black px-8 hover:bg-red-400 font-semibold border-2 hover:text-white mt-7 rounded h-10"
             onChange={handleSelectChange}
             value={selectedOption}
           >
@@ -180,7 +185,13 @@ const TablesPage = () => {
         </NotificationBar>
 
         <CardBox>
-          <TableSampleAdminstators columns={columns} data={data} type={selectedOption} onUpdateData={handleUpdateData} onDelete={handleDelete} />
+          <TableSampleAdminstators
+            columns={columns}
+            data={data}
+            type={selectedOption}
+            onUpdateData={handleUpdateData}
+            onDelete={handleDelete}
+          />
         </CardBox>
 
         <NotificationBar color="info" icon={mdiTableOff}>
@@ -188,7 +199,13 @@ const TablesPage = () => {
         </NotificationBar>
 
         <CardBox>
-          <TableSampleAdminstators columns={makananColumns} data={dataMakanan} type='makanan' onUpdateData={handleUpdateData} onDelete={handleDelete} />
+          <TableSampleAdminstators
+            columns={makananColumns}
+            data={dataMakanan}
+            type="makanan"
+            onUpdateData={handleUpdateData}
+            onDelete={handleDelete}
+          />
         </CardBox>
 
         {showNotification && (
@@ -196,6 +213,22 @@ const TablesPage = () => {
             {notificationMessage}
           </NotificationBar>
         )}
+
+        <BubbleChat
+          chatflowid="4d5f6294-ecfa-4c83-8c62-ebe33e757724"
+          apiHost="http://localhost:3000"
+          theme={{
+            chatWindow: {
+              title: 'General Data',
+              footer: {
+                textColor: '#303235',
+                text: 'Gemoy',
+                company: 'ChatBot',
+                companyLink: 'https://flowiseai.com',
+              },
+            },
+          }}
+        />
 
         <CardBox>
           <CardBoxComponentEmpty />
